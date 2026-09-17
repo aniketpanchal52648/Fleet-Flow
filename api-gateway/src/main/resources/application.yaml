@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+            allowedHeaders: "*"
+      routes:
+        # 1. User Service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/web/v1/user-service/**
+
+        # 2. Shipment Service
+        - id: shipment-service
+          uri: lb://SHIPMENT-SERVICE
+          predicates:
+            - Path=/web/v1/shipment-service/**
+
+        # 3. Fleet Partner Service
+        - id: fleet-partner-service
+          uri: lb://FLEET-PARTNER-SERVICE
+          predicates:
+            - Path=/web/v1/fleet-partner-service/**
+
+        # 4. Tracking Service (Public endpoints only, /internal is blocked by filter)
+        - id: tracking-service
+          uri: lb://TRACKING-SERVICE
+          predicates:
+            - Path=/web/v1/tracking-service/**
+
+        # 5. Matching & Offer Service
+        - id: matching-service
+          uri: lb://MATCHING-SERVICE
+          predicates:
+            - Path=/web/v1/matching-service/**
+
+        # 6. Notification Service
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/web/v1/notification-service/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

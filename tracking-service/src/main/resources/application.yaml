@@ -1,0 +1,70 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: tracking-service
+
+  # 1. PostgreSQL (Tracking Sessions in schema 'tracking_service')
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fleet-flow?currentSchema=tracking_service
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: tracking_service
+
+  mongodb:
+    host: localhost
+    port: 27017
+    database: fleet_flow_tracking
+  # 2. MongoDB (High-Volume Raw GPS Telemetry)
+  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/fleet_flow_tracking
+#      auto-index-creation: true
+
+    # 3. Redis (Live Geospatial Index & Presence)
+    redis:
+      host: localhost
+      port: 6379
+
+  # 4. Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: tracking-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Custom Redis Keys & Settings
+app:
+  tracking:
+    redis:
+      geo-key: "geo:available-drivers"
+      presence-prefix: "driver:presence:"
+      shipment-driver-prefix: "shipment:driver:"
+      driver-shipment-prefix: "driver:shipment:"
+    stale-threshold-minutes: 2
+    offline-threshold-minutes: 5
+  kafka:
+    topics:
+      offer-accepted: delivery-offer.accepted
+

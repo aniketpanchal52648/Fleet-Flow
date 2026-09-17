@@ -1,2 +1,3 @@
 # Project exclude paths
 /fleet-common-error-handling/target/
+.idea

@@ -4,11 +4,15 @@ import com.example.shipmentservice.dto.ApiResponseDto;
 import com.example.shipmentservice.dto.ShipmentStatusUpdateDto;
 import com.example.shipmentservice.dto.UserShipmentCollection;
 import com.example.shipmentservice.dto.UserShipmentDto;
+import com.example.shipmentservice.entities.OutboxEvent;
+import com.example.shipmentservice.entities.OutboxStatus;
 import com.example.shipmentservice.entities.Shipment;
 import com.example.shipmentservice.entities.ShipmentStatus;
+import com.example.shipmentservice.repository.OutboxEventRepository;
 import com.example.shipmentservice.repository.ShipmentRepository;
 import com.example.shipmentservice.repository.spec.ShipmentSpecification;
 import com.example.shipmentservice.util.ShipmentServiceUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ErrorDetail;
@@ -30,6 +34,8 @@ public class ShipmentService {
 
     private final ShipmentRepository shipmentRepository;
     private final UserValidationService userValidationService;
+    private final OutboxEventRepository outboxEventRepository;
+    private final ObjectMapper objectMapper;
 
     public UserShipmentDto createShipment(UserShipmentDto userShipmentDto) {
         String userId = userShipmentDto.getUserId();
@@ -51,6 +57,8 @@ public class ShipmentService {
 
         Shipment created = shipmentRepository.save(shipment);
         log.info("Created shipment with shipmentId: {}", created.getShipmentId());
+        // --- TRANSACTIONAL OUTBOX: Save event in the same DB transaction ---
+        saveShipmentCreatedOutboxEvent(created);
         return ShipmentServiceUtils.entityToDto(created);
     }
 
@@ -152,5 +160,56 @@ public class ShipmentService {
                 .or(() -> shipmentRepository.findById(shipmentId))
                 .orElseThrow(() -> new ErrorException(new ErrorDetail("SHIPMENT_NOT_FOUND", "shipmentId",
                         "Shipment not found with id: " + shipmentId)));
+    }
+
+    private void saveShipmentCreatedOutboxEvent(Shipment shipment) {
+        try {
+            org.example.event.AddressEventDto pickupDto = shipment.getPickupLocation() != null ?
+                    org.example.event.AddressEventDto.builder()
+                            .addressLineOne(shipment.getPickupLocation().getAddressLineOne())
+                            .addressLineTwo(shipment.getPickupLocation().getAddressLineTwo())
+                            .district(shipment.getPickupLocation().getDistrict())
+                            .state(shipment.getPickupLocation().getState())
+                            .pincode(shipment.getPickupLocation().getPincode())
+                            .geoLocation(shipment.getPickupLocation().getGeoLocation())
+                            .addressType(shipment.getPickupLocation().getAddressType() != null ? shipment.getPickupLocation().getAddressType().name() : null)
+                            .build() : null;
+            org.example.event.AddressEventDto dropDto = shipment.getDropLocation() != null ?
+                    org.example.event.AddressEventDto.builder()
+                            .addressLineOne(shipment.getDropLocation().getAddressLineOne())
+                            .addressLineTwo(shipment.getDropLocation().getAddressLineTwo())
+                            .district(shipment.getDropLocation().getDistrict())
+                            .state(shipment.getDropLocation().getState())
+                            .pincode(shipment.getDropLocation().getPincode())
+                            .geoLocation(shipment.getDropLocation().getGeoLocation())
+                            .addressType(shipment.getDropLocation().getAddressType() != null ? shipment.getDropLocation().getAddressType().name() : null)
+                            .build() : null;
+            org.example.event.ShipmentCreatedEvent event = org.example.event.ShipmentCreatedEvent.builder()
+                    .eventId(UUID.randomUUID().toString())
+                    .eventType("SHIPMENT_CREATED")
+                    .shipmentId(shipment.getShipmentId())
+                    .userId(shipment.getUserId())
+                    .vehicleType(shipment.getVehicleType())
+                    .weightKg(shipment.getWeightKg())
+                    .pickupAddress(pickupDto)
+                    .dropAddress(dropDto)
+                    .status(shipment.getShipmentStatus().name())
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            String payload = objectMapper.writeValueAsString(event);
+            OutboxEvent outboxEvent = OutboxEvent.builder()
+                    .aggregateType("SHIPMENT")
+                    .aggregateId(shipment.getShipmentId())
+                    .eventType("SHIPMENT_CREATED")
+                    .payload(payload)
+                    .status(OutboxStatus.PENDING)
+                    .retryCount(0)
+                    .build();
+            outboxEventRepository.save(outboxEvent);
+            log.info("Saved outbox event for shipmentId: {}", shipment.getShipmentId());
+        } catch (Exception e) {
+            log.error("Failed to serialize and save outbox event for shipment: {}", shipment.getShipmentId(), e);
+            throw new RuntimeException("Could not create shipment outbox event", e);
+        }
     }
 }

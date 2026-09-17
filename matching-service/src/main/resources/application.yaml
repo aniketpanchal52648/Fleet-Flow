@@ -1,0 +1,59 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: matching-service
+
+  # PostgreSQL (Offers and Outbox in dedicated schema 'matching_service')
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fleet-flow?currentSchema=matching_service
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: matching_service
+
+  # Flyway Database Migration
+  flyway:
+    enabled: true
+    schemas: matching_service
+    default-schema: matching_service
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: matching-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Business & Marketplace Configuration
+app:
+  services:
+    tracking-service-url: http://TRACKING-SERVICE
+  kafka:
+    topics:
+      shipment-created: shipment-request.created
+      offer-accepted: delivery-offer.accepted
+      offer-created: delivery-offer.created
+  matching:
+    default-radius-km: 10.0
+    offer-expiry-minutes: 5

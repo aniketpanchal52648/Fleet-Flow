@@ -1,0 +1,2003 @@
+{
+    "info": {
+        "_postman_id": "a8f3b2c1-d4e5-4a6b-8c7d-fleetflow001",
+        "name": "Fleet Flow API Collection",
+        "description": "Production-grade Postman collection for Fleet Flow microservices platform (Fleet Partner, Vehicle, Driver, Assignment, Shipment, and User Services). Uses parameterized base URLs for seamless transition to API Gateway.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "fleet_partner_url",
+            "value": "http://localhost:8083",
+            "type": "string",
+            "description": "Fleet Partner Service Base URL (change to http://localhost:8080 when using API Gateway)"
+        },
+        {
+            "key": "shipment_url",
+            "value": "http://localhost:8082",
+            "type": "string",
+            "description": "Shipment Service Base URL (change to http://localhost:8080 when using API Gateway)"
+        },
+        {
+            "key": "user_url",
+            "value": "http://localhost:8081",
+            "type": "string",
+            "description": "User Service Base URL (change to http://localhost:8080 when using API Gateway)"
+        },
+        {
+            "key": "tracking_url",
+            "value": "http://localhost:8084",
+            "type": "string",
+            "description": "Tracking Service Base URL (change to http://localhost:8080 when using API Gateway)"
+        },
+        {
+            "key": "matching_url",
+            "value": "http://localhost:8085",
+            "type": "string",
+            "description": "Matching & Offer Service Base URL (change to http://localhost:8080 when using API Gateway)"
+        },
+        {
+            "key": "notification_url",
+            "value": "http://localhost:8086",
+            "type": "string",
+            "description": "Notification Service Base URL (change to http://localhost:8080 when using API Gateway)"
+        },
+        {
+            "key": "gateway_url",
+            "value": "http://localhost:8080",
+            "type": "string",
+            "description": "Central API Gateway Base URL (Port 8080)"
+        }
+    ],
+    "item": [
+        {
+            "name": "1. Fleet Partner Service",
+            "description": "APIs managing Fleet Partners, Vehicles, Drivers, and Shift Assignments.",
+            "item": [
+                {
+                    "name": "Partner",
+                    "item": [
+                        {
+                            "name": "Create Partner",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"partnerId\": \"FP-1001\",\n  \"partnerType\": \"FLEET_COMPANY\",\n  \"name\": \"Apex Logistics Fleet\",\n  \"ownerName\": \"Rajesh Sharma\",\n  \"keycloakId\": \"kc-user-123\",\n  \"status\": \"ACTIVE\",\n  \"tags\": [\"Mumbai\", \"Pune\", \"Thane\"],\n  \"vehicles\": [\n    {\n      \"registrationNo\": \"MH01AB1234\",\n      \"vehicleType\": \"TATA_ACE\",\n      \"weightCapacity\": 750.0,\n      \"volumeCapacity\": 120.0,\n      \"dimension\": \"8ft x 4.5ft x 5ft\",\n      \"availability\": \"AVAILABLE\"\n    }\n  ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get All Active Partners",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Partners by Status",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner?status=PENDING",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "PENDING"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Partner by ID",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Partner",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Apex Logistics Fleet Private Limited\",\n  \"ownerName\": \"Rajesh Sharma\",\n  \"partnerType\": \"FLEET_COMPANY\",\n  \"keycloakId\": \"kc-user-123\",\n  \"tags\": [\"Mumbai\", \"Pune\", \"Navi Mumbai\"]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Activate Partner",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001/activate",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001",
+                                        "activate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Inactivate Partner",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001/inactivate",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001",
+                                        "inactivate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Partner (Soft Delete)",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001/delete",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001",
+                                        "delete"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Bulk Associate Vehicles",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "[\"VEH-1001\", \"VEH-1002\"]"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001/vehicles",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001",
+                                        "vehicles"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Bulk Disassociate Vehicles",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "[\"VEH-1001\", \"VEH-1002\"]"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/partner/FP-1001/vehicles",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "partner",
+                                        "FP-1001",
+                                        "vehicles"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Vehicle",
+                    "item": [
+                        {
+                            "name": "Create Vehicle",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"registrationNo\": \"MH02CD5678\",\n  \"fleetPartnerId\": \"FP-1001\",\n  \"vehicleType\": \"3_WHEELER\",\n  \"weightCapacity\": 500.0,\n  \"volumeCapacity\": 80.0,\n  \"dimension\": \"5.5ft x 3.5ft x 4ft\",\n  \"status\": \"ACTIVE\",\n  \"availability\": \"AVAILABLE\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Query Vehicles (with Filters)",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle?status=ACTIVE&fleetpartner=FP-1001&vehicleType=TATA_ACE&capacity=500&dimension=8ft",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "ACTIVE"
+                                        },
+                                        {
+                                            "key": "fleetpartner",
+                                            "value": "FP-1001"
+                                        },
+                                        {
+                                            "key": "vehicleType",
+                                            "value": "TATA_ACE"
+                                        },
+                                        {
+                                            "key": "capacity",
+                                            "value": "500"
+                                        },
+                                        {
+                                            "key": "dimension",
+                                            "value": "8ft"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Vehicle by ID",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle/VEH-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle",
+                                        "VEH-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Vehicle",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"registrationNo\": \"MH02CD5678\",\n  \"vehicleType\": \"3_WHEELER\",\n  \"weightCapacity\": 550.0,\n  \"volumeCapacity\": 90.0,\n  \"dimension\": \"6ft x 4ft x 4ft\",\n  \"availability\": \"AVAILABLE\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle/VEH-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle",
+                                        "VEH-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Activate Vehicle",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle/VEH-1001/activate",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle",
+                                        "VEH-1001",
+                                        "activate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Inactivate Vehicle",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle/VEH-1001/inactivate",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle",
+                                        "VEH-1001",
+                                        "inactivate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Vehicle (Soft Delete)",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/vehicle/VEH-1001/delete",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "vehicle",
+                                        "VEH-1001",
+                                        "delete"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Driver",
+                    "item": [
+                        {
+                            "name": "Register Driver",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Sunil Verma\",\n  \"phoneNo\": \"+919820098200\",\n  \"licencesNo\": \"MH0120200004567\",\n  \"licencesExpiry\": \"2028-12-31T23:59:59.000+00:00\",\n  \"partnerId\": \"FP-1001\",\n  \"keycloakId\": \"kc-drv-101\",\n  \"status\": \"ACTIVE\",\n  \"availability\": \"AVAILABLE\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Query Drivers (with Filters)",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver?status=ACTIVE&partnerId=FP-1001&availability=AVAILABLE",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "ACTIVE"
+                                        },
+                                        {
+                                            "key": "partnerId",
+                                            "value": "FP-1001"
+                                        },
+                                        {
+                                            "key": "availability",
+                                            "value": "AVAILABLE"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Driver by ID",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver/DRV-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver",
+                                        "DRV-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Driver",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Sunil R. Verma\",\n  \"phoneNo\": \"+919820098200\",\n  \"licencesNo\": \"MH0120200004567\",\n  \"licencesExpiry\": \"2029-06-30T23:59:59.000+00:00\",\n  \"partnerId\": \"FP-1001\",\n  \"availability\": \"AVAILABLE\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver/DRV-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver",
+                                        "DRV-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Activate Driver",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver/DRV-1001/activate",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver",
+                                        "DRV-1001",
+                                        "activate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Inactivate Driver",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver/DRV-1001/inactivate",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver",
+                                        "DRV-1001",
+                                        "inactivate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Driver (Soft Delete)",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/driver/DRV-1001/delete",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "driver",
+                                        "DRV-1001",
+                                        "delete"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Driver-Vehicle Assignment",
+                    "item": [
+                        {
+                            "name": "Assign Driver to Vehicle",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"vehicleId\": \"VEH-1001\",\n  \"driverId\": \"DRV-1001\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/assignment/assign",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "assignment",
+                                        "assign"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Unassign Shift / End Assignment",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"endReason\": \"SHIFT_COMPLETED\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/assignment/ASG-1001/unassign",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "assignment",
+                                        "ASG-1001",
+                                        "unassign"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Active Driver for Vehicle",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/assignment/active/vehicle/VEH-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "assignment",
+                                        "active",
+                                        "vehicle",
+                                        "VEH-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Active Vehicle for Driver",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/assignment/active/driver/DRV-1001",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "assignment",
+                                        "active",
+                                        "driver",
+                                        "DRV-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Assignment History",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{fleet_partner_url}}/web/v1/fleet-partner-service/assignment/history?vehicleId=VEH-1001&driverId=DRV-1001&status=ACTIVE",
+                                    "host": [
+                                        "{{fleet_partner_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "fleet-partner-service",
+                                        "assignment",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "vehicleId",
+                                            "value": "VEH-1001"
+                                        },
+                                        {
+                                            "key": "driverId",
+                                            "value": "DRV-1001"
+                                        },
+                                        {
+                                            "key": "status",
+                                            "value": "ACTIVE"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "2. Shipment Service",
+            "description": "APIs managing customer bookings, shipment tracking, and delivery milestones.",
+            "item": [
+                {
+                    "name": "Shipment",
+                    "item": [
+                        {
+                            "name": "Book Shipment",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"userId\": \"USR-1001\",\n  \"vehicleType\": \"TATA_ACE\",\n  \"weightKg\": 450.0,\n  \"pickupLocation\": {\n    \"addressLineOne\": \"Unit 402, Trade Center\",\n    \"addressLineTwo\": \"Bandra Kurla Complex\",\n    \"district\": \"Mumbai Suburban\",\n    \"state\": \"Maharashtra\",\n    \"pincode\": 400051,\n    \"addressType\": \"OFFICE\",\n    \"geoLocation\": \"19.0662,72.8687\"\n  },\n  \"dropLocation\": {\n    \"addressLineOne\": \"Warehouse 7, Sector 18\",\n    \"addressLineTwo\": \"Vashi Industrial Area\",\n    \"district\": \"Thane\",\n    \"state\": \"Maharashtra\",\n    \"pincode\": 400703,\n    \"addressType\": \"WAREHOUSE\",\n    \"geoLocation\": \"19.0760,72.9984\"\n  }\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Query Shipments (with Filters)",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment?status=CREATED&userId=USR-1001&vehicleType=TATA_ACE",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "CREATED"
+                                        },
+                                        {
+                                            "key": "userId",
+                                            "value": "USR-1001"
+                                        },
+                                        {
+                                            "key": "driverId",
+                                            "value": "",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "vehicleId",
+                                            "value": "",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "vehicleType",
+                                            "value": "TATA_ACE"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Shipment by ID",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Shipment Details",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"weightKg\": 500.0,\n  \"vehicleType\": \"TATA_ACE\",\n  \"pickupLocation\": {\n    \"addressLineOne\": \"Unit 402, Trade Center (Gate 2)\",\n    \"addressLineTwo\": \"Bandra Kurla Complex\",\n    \"district\": \"Mumbai Suburban\",\n    \"state\": \"Maharashtra\",\n    \"pincode\": 400051,\n    \"addressType\": \"OFFICE\",\n    \"geoLocation\": \"19.0662,72.8687\"\n  }\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Status Transition - Driver Assigned",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"DRIVER_ASSIGNED\",\n  \"driverId\": \"DRV-1001\",\n  \"vehicleId\": \"VEH-1001\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001/status",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001",
+                                        "status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Status Transition - Picked Up",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"PICKED_UP\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001/status",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001",
+                                        "status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Status Transition - In Transit",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"IN_TRANSIT\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001/status",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001",
+                                        "status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Status Transition - Complete Delivery",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"COMPLETED\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001/status",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001",
+                                        "status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Status Transition - Cancel Shipment",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"CANCELLED\",\n  \"cancellationReason\": \"Customer requested cancellation before pickup\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/SHP-1001/status",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "SHP-1001",
+                                        "status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Shipments for User",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{shipment_url}}/web/v1/shipment-service/shipment/user/USR-1001",
+                                    "host": [
+                                        "{{shipment_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "shipment-service",
+                                        "shipment",
+                                        "user",
+                                        "USR-1001"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "3. User Service",
+            "description": "APIs managing customer profiles, verification statuses, and saved addresses.",
+            "item": [
+                {
+                    "name": "User Profile & Lifecycle",
+                    "item": [
+                        {
+                            "name": "Register User",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"aniket.sharma@example.com\",\n  \"phoneNo\": \"+919876543210\",\n  \"firstName\": \"Aniket\",\n  \"lastName\": \"Sharma\",\n  \"keycloakId\": \"kc-user-201\",\n  \"role\": \"USER_ROLE\",\n  \"userAddressDtoList\": [\n    {\n      \"addressLineOne\": \"Flat 301, Sunshine Heights\",\n      \"addressLineTwo\": \"Andheri West\",\n      \"district\": \"Mumbai\",\n      \"state\": \"Maharashtra\",\n      \"pincode\": 400053,\n      \"addressType\": \"HOME\",\n      \"geoLocation\": \"19.1363,72.8277\"\n    }\n  ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Query Users (with Filters)",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user?status=ACTIVE&role=USER_ROLE&email=aniket.sharma@example.com&phoneNo=+919876543210",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "ACTIVE"
+                                        },
+                                        {
+                                            "key": "role",
+                                            "value": "USER_ROLE"
+                                        },
+                                        {
+                                            "key": "email",
+                                            "value": "aniket.sharma@example.com"
+                                        },
+                                        {
+                                            "key": "phoneNo",
+                                            "value": "+919876543210"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get User by ID",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update User Profile",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"firstName\": \"Aniket\",\n  \"lastName\": \"Sharma\",\n  \"phoneNo\": \"+919876543210\",\n  \"role\": \"USER_ROLE\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Activate User",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/activate",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "activate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Inactivate User",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/inactivate",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "inactivate"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete User (Soft Delete)",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/delete",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "delete"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Address Management",
+                    "item": [
+                        {
+                            "name": "Add Saved Address",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"addressLineOne\": \"Tower B, Office 12\",\n  \"addressLineTwo\": \"Mindspace IT Park\",\n  \"district\": \"Mumbai\",\n  \"state\": \"Maharashtra\",\n  \"pincode\": 400064,\n  \"addressType\": \"OFFICE\",\n  \"geoLocation\": \"19.1764,72.8360\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/address",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "address"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List User Addresses",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/address",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "address"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Saved Address",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"addressLineOne\": \"Tower B, Office 12 (Floor 3)\",\n  \"addressLineTwo\": \"Mindspace IT Park\",\n  \"district\": \"Mumbai\",\n  \"state\": \"Maharashtra\",\n  \"pincode\": 400064,\n  \"addressType\": \"OFFICE\",\n  \"geoLocation\": \"19.1764,72.8360\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/address/ADDR-1001",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "address",
+                                        "ADDR-1001"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Saved Address",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{user_url}}/web/v1/user-service/user/USR-1001/address/ADDR-1001",
+                                    "host": [
+                                        "{{user_url}}"
+                                    ],
+                                    "path": [
+                                        "web",
+                                        "v1",
+                                        "user-service",
+                                        "user",
+                                        "USR-1001",
+                                        "address",
+                                        "ADDR-1001"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "4. Tracking Service",
+            "description": "Driver live tracking sessions, GPS ingestion, presence, and nearby driver geospatial lookup.",
+            "item": [
+                {
+                    "name": "Start Tracking Session (Go Online)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"driverId\": \"DRV-101\",\n  \"vehicleId\": \"VEH-501\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{tracking_url}}/web/v1/tracking-service/driver-tracking-sessions",
+                            "host": [
+                                "{{tracking_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "tracking-service",
+                                "driver-tracking-sessions"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Send Driver Location (GPS Point)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"eventId\": \"LOC-EVT-1001\",\n  \"driverId\": \"DRV-101\",\n  \"vehicleId\": \"VEH-501\",\n  \"latitude\": 18.5204,\n  \"longitude\": 73.8567,\n  \"accuracyMeters\": 10.0,\n  \"speedKph\": 32.5,\n  \"bearing\": 85.0,\n  \"recordedAt\": \"2026-09-09T10:15:30\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{tracking_url}}/web/v1/tracking-service/driver-locations",
+                            "host": [
+                                "{{tracking_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "tracking-service",
+                                "driver-locations"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Driver Presence",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{tracking_url}}/web/v1/tracking-service/drivers/DRV-101/presence",
+                            "host": [
+                                "{{tracking_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "tracking-service",
+                                "drivers",
+                                "DRV-101",
+                                "presence"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Nearby Drivers (Internal for Matching)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{tracking_url}}/internal/v1/tracking-service/nearby-drivers?latitude=18.5204&longitude=73.8567&radiusKm=10.0",
+                            "host": [
+                                "{{tracking_url}}"
+                            ],
+                            "path": [
+                                "internal",
+                                "v1",
+                                "tracking-service",
+                                "nearby-drivers"
+                            ],
+                            "query": [
+                                {
+                                    "key": "latitude",
+                                    "value": "18.5204"
+                                },
+                                {
+                                    "key": "longitude",
+                                    "value": "73.8567"
+                                },
+                                {
+                                    "key": "radiusKm",
+                                    "value": "10.0"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Stop Tracking Session (Go Offline)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"driverId\": \"DRV-101\",\n  \"reason\": \"DRIVER_OFFLINE\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{tracking_url}}/web/v1/tracking-service/driver-tracking-sessions/current/stop",
+                            "host": [
+                                "{{tracking_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "tracking-service",
+                                "driver-tracking-sessions",
+                                "current",
+                                "stop"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Shipment Live Location",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{tracking_url}}/web/v1/tracking-service/shipments/SHP-1001/live-location",
+                            "host": [
+                                "{{tracking_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "tracking-service",
+                                "shipments",
+                                "SHP-1001",
+                                "live-location"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "5. Matching & Offer Service",
+            "description": "APIs for Delivery Offers, FCFS Job Claiming, and Driver Dispatching.",
+            "item": [
+                {
+                    "name": "Get Delivery Offer by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{matching_url}}/web/v1/matching-service/delivery-offers/OFR-SAMPLE123",
+                            "host": [
+                                "{{matching_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "matching-service",
+                                "delivery-offers",
+                                "OFR-SAMPLE123"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Driver Open Offers",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{matching_url}}/web/v1/matching-service/delivery-offers?driverId=DRV-101&status=OPEN",
+                            "host": [
+                                "{{matching_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "matching-service",
+                                "delivery-offers"
+                            ],
+                            "query": [
+                                {
+                                    "key": "driverId",
+                                    "value": "DRV-101"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "OPEN"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Accept Delivery Offer (FCFS)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{matching_url}}/web/v1/matching-service/delivery-offers/OFR-SAMPLE123/accept",
+                            "host": [
+                                "{{matching_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "matching-service",
+                                "delivery-offers",
+                                "OFR-SAMPLE123",
+                                "accept"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Reject Delivery Offer",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{matching_url}}/web/v1/matching-service/delivery-offers/OFR-SAMPLE123/reject",
+                            "host": [
+                                "{{matching_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "matching-service",
+                                "delivery-offers",
+                                "OFR-SAMPLE123",
+                                "reject"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "6. Notification Service",
+            "description": "APIs managing Device FCM Token Registrations and Push Notification Delivery History.",
+            "item": [
+                {
+                    "name": "Register Device Token (Driver)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"recipientId\": \"DRV-101\",\n  \"recipientType\": \"DRIVER\",\n  \"deviceToken\": \"fcm-sample-device-token-abc123xyz\",\n  \"deviceType\": \"ANDROID\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{notification_url}}/web/v1/notification-service/devices/register",
+                            "host": [
+                                "{{notification_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "devices",
+                                "register"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Active Device Token",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{notification_url}}/web/v1/notification-service/devices/active?recipientId=DRV-101&recipientType=DRIVER",
+                            "host": [
+                                "{{notification_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "devices",
+                                "active"
+                            ],
+                            "query": [
+                                {
+                                    "key": "recipientId",
+                                    "value": "DRV-101"
+                                },
+                                {
+                                    "key": "recipientType",
+                                    "value": "DRIVER"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Unregister Device Token",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{notification_url}}/web/v1/notification-service/devices/unregister?recipientId=DRV-101&recipientType=DRIVER",
+                            "host": [
+                                "{{notification_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "devices",
+                                "unregister"
+                            ],
+                            "query": [
+                                {
+                                    "key": "recipientId",
+                                    "value": "DRV-101"
+                                },
+                                {
+                                    "key": "recipientType",
+                                    "value": "DRIVER"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Notification History by Recipient",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{notification_url}}/web/v1/notification-service/notifications?recipientId=DRV-101&recipientType=DRIVER",
+                            "host": [
+                                "{{notification_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "notifications"
+                            ],
+                            "query": [
+                                {
+                                    "key": "recipientId",
+                                    "value": "DRV-101"
+                                },
+                                {
+                                    "key": "recipientType",
+                                    "value": "DRIVER"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Register Device Token (Customer)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"recipientId\": \"USR-101\",\n  \"recipientType\": \"CUSTOMER\",\n  \"deviceToken\": \"fcm-sample-customer-token-xyz987\",\n  \"deviceType\": \"ANDROID\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{notification_url}}/web/v1/notification-service/devices/register",
+                            "host": [
+                                "{{notification_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "devices",
+                                "register"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Customer Notification History",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{notification_url}}/web/v1/notification-service/notifications?recipientId=USR-101&recipientType=CUSTOMER",
+                            "host": [
+                                "{{notification_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "notifications"
+                            ],
+                            "query": [
+                                {
+                                    "key": "recipientId",
+                                    "value": "USR-101"
+                                },
+                                {
+                                    "key": "recipientType",
+                                    "value": "CUSTOMER"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "7. API Gateway (Port 8080)",
+            "description": "Central API Gateway verification endpoints including route forwarding, correlation ID propagation, and internal route protection.",
+            "item": [
+                {
+                    "name": "1. Test Protected Internal Route (Expect 403 Forbidden)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{gateway_url}}/internal/v1/tracking-service/nearby-drivers?latitude=37.7749&longitude=-122.4194&radiusKm=5",
+                            "host": [
+                                "{{gateway_url}}"
+                            ],
+                            "path": [
+                                "internal",
+                                "v1",
+                                "tracking-service",
+                                "nearby-drivers"
+                            ],
+                            "query": [
+                                {
+                                    "key": "latitude",
+                                    "value": "37.7749"
+                                },
+                                {
+                                    "key": "longitude",
+                                    "value": "-122.4194"
+                                },
+                                {
+                                    "key": "radiusKm",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "2. Route through Gateway: User Service - List Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Correlation-ID",
+                                "value": "test-gateway-corr-123"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{gateway_url}}/web/v1/user-service/users",
+                            "host": [
+                                "{{gateway_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "user-service",
+                                "users"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "3. Route through Gateway: Shipment Service - Get Shipment",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{gateway_url}}/web/v1/shipment-service/shipments/SHP-1001",
+                            "host": [
+                                "{{gateway_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "shipment-service",
+                                "shipments",
+                                "SHP-1001"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "4. Route through Gateway: Tracking Service - Live Location",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{gateway_url}}/web/v1/tracking-service/shipments/SHP-1001/live-location",
+                            "host": [
+                                "{{gateway_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "tracking-service",
+                                "shipments",
+                                "SHP-1001",
+                                "live-location"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "5. Route through Gateway: Notification Service - Notification History",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{gateway_url}}/web/v1/notification-service/notifications?recipientId=USR-101&recipientType=CUSTOMER",
+                            "host": [
+                                "{{gateway_url}}"
+                            ],
+                            "path": [
+                                "web",
+                                "v1",
+                                "notification-service",
+                                "notifications"
+                            ],
+                            "query": [
+                                {
+                                    "key": "recipientId",
+                                    "value": "USR-101"
+                                },
+                                {
+                                    "key": "recipientType",
+                                    "value": "CUSTOMER"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -3,15 +3,40 @@ spring:
     name: shipment-service
   # DATABASE CONNECTION
   datasource:
-    url: jdbc:postgresql://localhost:5432/fleet-flow
+    url: jdbc:postgresql://localhost:5432/fleet-flow?currentSchema=shipment_service
     username: postgres
     password: admin
 
   # ORM / DATABASE MAPPING
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: shipment_service
+
+  # Flyway Database Migration
+  flyway:
+    enabled: true
+    schemas: shipment_service
+    default-schema: shipment_service
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  # KAFKA CONFIGURATION
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: shipment-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 server:
   port: 8082
@@ -22,3 +47,10 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+app:
+  kafka:
+    topics:
+      shipment-created: shipment-request.created
+      offer-accepted: delivery-offer.accepted
+      shipment-assigned: shipment.assigned

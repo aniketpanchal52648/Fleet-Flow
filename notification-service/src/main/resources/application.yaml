@@ -1,0 +1,55 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: notification-service
+
+  # PostgreSQL (Schema isolated to 'notification_service')
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fleet-flow?currentSchema=notification_service
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: notification_service
+
+  # Flyway Database Migration
+  flyway:
+    enabled: true
+    schemas: notification_service
+    default-schema: notification_service
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Business & Notification Configuration
+app:
+  notification:
+    provider: dev # Default is 'dev' (Mock). Run with --app.notification.provider=firebase for real FCM!
+  firebase:
+    credentials-path: classpath:firebase-service-account.json
+  kafka:
+    topics:
+      offer-created: delivery-offer.created
+      shipment-assigned: shipment.assigned
+
